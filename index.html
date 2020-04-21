@@ -25,11 +25,11 @@
 
                      <div class="col-md-5 center-item">
                         <div class="input-group number-spinner">
-                           <button id="subtract" class="btn btn-default"><i class="fas fa-minus"></i></button>
-                           <input id="input" type="text" class="form-control text-center" value="1">
-                           <button id="addBtn" class="btn btn-default"><i class="fas fa-plus"></i></button>
+                           <button id="minusBtn" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                           <input id="input-value" type="text" class="form-control text-center" value="1">
+                           <button id="plusBtn" class="btn btn-default"><i class="fas fa-plus"></i></button>
                         </div>
-                        <h5>$1219</h5>
+                        <h5>$<span id="current-balance">1219</span></h5>
                         <img src="images/remove.png" alt="" class="remove-item">
                      </div>
                   </div>
@@ -43,12 +43,12 @@
                      </div>
                      <div class="col-md-5 center-item">
                         <div class="input-group number-spinner">
-                           <button id="subtract2" class="btn btn-default"><i class="fas fa-minus"></i></button>
-                           <input id="input2"type="text" class="form-control text-center" value="1">
-                           <button id="addBtn2"class="btn btn-default"><i class="fas fa-plus"></i></button>
+                           <button id="caseMinusBtn" class="btn btn-default"><i class="fas fa-minus"></i></button>
+                           <input id="caseInput" type="text" class="form-control text-center" value="1">
+                           <button id="casePlusBtn" class="btn btn-default"><i class="fas fa-plus"></i></button>
 
                         </div>
-                        <h5>$59</h5>
+                        <h5>$ <span id="caseCurrent-balance"> 59</span></h5>
                         <img src="images/remove.png" alt="" class="remove-item">
                      </div>
                   </div>
@@ -59,14 +59,14 @@
 
                      <div class="col-md-8">
                         <h5>Subtotal: </h5>
-                        <h5>Tax:</h5>
+                        <h5>Tax: 5%</h5>
                         <h5>Total:</h5>
                      </div>
 
                      <div class="col-md-4 status">
-                        <h5>$1,278</h5>
-                        <h5>$0</h5>
-                        <h5>$1,278</h5>
+                        <h5>$<span id="sub-balance">1,278</span></h5>
+                        <h5>$ <span id="tex">0</span> </h5>
+                        <h5>$ <span id="total-amount">1,278</span></h5>
                      </div>
                   </div>
                </div>
@@ -77,30 +77,101 @@
          </div>
       </div>
    </section>
-
    <script>
-      let btnAdd = document.querySelector("#addBtn");
-      let subtractBtn = document.querySelector("#subtract");
-      let input = document.querySelector('#input');
-
-      btnAdd.addEventListener("click",function(){
-         input.value = parseInt(input.value) + 1;
+      //phone pluseBtn
+      const plusBtn = document.getElementById('plusBtn');
+      plusBtn.addEventListener('click', function(){
+        
+         const totalInput = getInputValue('input-value');
+         const totalPrice = totalInput * 1219;
+         document.getElementById('current-balance').innerText = totalPrice;
+         getSubTotal();
+         texFixed();
+         totalAmount()
       })
-      subtractBtn.addEventListener("click",function(){
-         input.value = parseInt(input.value) - 1;
+      // case plusBtn 
+      const casePlusBtn = document.getElementById('casePlusBtn');
+      casePlusBtn.addEventListener('click', function(){
+
+         const totalInput = getInputValue('caseInput');
+         const totalPrice = totalInput * 59;
+         document.getElementById('caseCurrent-balance').innerText = totalPrice;
+         getSubTotal();
+         texFixed();
+         totalAmount()
+        
+      })
+      //phone minus btn 
+      const minusBtn = document.getElementById('minusBtn');
+      minusBtn.addEventListener('click', function(){
+         const totalInput= getInputValueMinus('input-value');
+         const totalPrice = totalInput * 1219;
+         document.getElementById('current-balance').innerText = totalPrice;
+         getSubTotal();
+         texFixed();
+         totalAmount()
+      })
+      //case minus btn
+      const caseMinusBtn = document.getElementById('caseMinusBtn');
+      caseMinusBtn.addEventListener('click', function(){
+        const totalInput= getInputValueMinus('caseInput');
+        const totalPrice = totalInput * 59;
+        document.getElementById('caseCurrent-balance').innerText = totalPrice;
+        getSubTotal();
+        texFixed();
+        totalAmount()
       })
 
+      // function start is place
+      function getInputValue(id){
+         const getInput = document.getElementById(id).value;
+         const nubInput = parseFloat(getInput);
+         const totalInput = nubInput + 1;
+         document.getElementById(id).value = totalInput;
+         return totalInput;
+      }
 
-      let btnAdd2 = document.querySelector("#addBtn2");
-      let subtractBtn2 = document.querySelector("#subtract2");
-      let input2 = document.querySelector('#input2');
+      function getInputValueMinus(id){
+         const getInput = document.getElementById(id).value;
+         const nubInput = parseFloat(getInput);
+         const totalInput = nubInput - 1;
+         if(totalInput >= 0){
 
-      btnAdd2.addEventListener("click",function(){
-         input2.value = parseInt(input2.value) + 1;
-      })
-      subtractBtn2.addEventListener("click",function(){
-         input2.value = parseInt(input2.value) - 1;
-      })
+         }else{
+            return 0;
+         }
+         document.getElementById(id).value = totalInput;
+         return totalInput;
+      }
+
+      function getSubTotal(){
+         const currentBalance = document.getElementById('current-balance').innerText;
+         const currentBalanceNum = parseFloat(currentBalance);
+         const caseCurtBalance = document.getElementById('caseCurrent-balance').innerText;
+         const caseCurtBalanceNum = parseFloat(caseCurtBalance);
+         const totalBalance = currentBalanceNum + caseCurtBalanceNum;
+         document.getElementById('sub-balance').innerText = totalBalance;  
+      }
+      function texFixed(){
+         const subBalance =  document.getElementById('sub-balance').innerText;
+         console.log(subBalance);
+         const subBalanceNum = parseFloat(subBalance);
+         console.log(subBalanceNum);
+         const tax = (subBalanceNum / 100 ) * 5;
+         console.log(tax);
+         const fixedTax = tax.toFixed(2);
+         document.getElementById('tex').innerText = fixedTax;
+
+      }
+      function totalAmount(){
+         const subBalance =  document.getElementById('sub-balance').innerText;
+         const subBalanceNum = parseFloat(subBalance);
+         const texValue =  document.getElementById('tex').innerText;
+         const texValueNum = parseFloat(texValue);
+         const totalAmount = subBalanceNum + texValueNum;
+         document.getElementById('total-amount').innerText = totalAmount;
+      }
+   
    </script>
 </body>
 
